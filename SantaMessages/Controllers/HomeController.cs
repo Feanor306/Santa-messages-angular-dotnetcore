@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using SantaMessages.Services;
 
 namespace SantaMessages.Controllers
 {
@@ -26,6 +27,7 @@ namespace SantaMessages.Controllers
             string msg = HttpContext.Request.Form["message"];
             try
             {
+                FileLogger.WriteToFile(msg);
                 return JsonConvert.SerializeObject(new
                 {
                     status = "Message Accepted",
