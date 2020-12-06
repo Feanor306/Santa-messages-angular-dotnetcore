@@ -2,8 +2,10 @@
   <div class="col-sm-12">
     <h1 id="santa_title" class="display-4">Christmas Wishes</h1>
     <p>Do you want to talk to Santa? Send a message now!</p>
-    <input type="text" id="text_input" size="40" />
-    <input type="button" id="action_button" value="Send" />
-    <label id="server_message"></label>
+    <input type="text" id="text_input" size="40" #text_input />
+    <input type="button" id="action_button" value="Send" (click)="onSendMessage()" />
+    <div>
+      <label id="server_message" [ngClass]="(server_error) ? 'text-danger':'text-success'">{{server_message}}</label>
+    </div>
   </div>
 </div>
