@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace SantaMessages.Services
 {
@@ -28,6 +29,26 @@ namespace SantaMessages.Services
                 // Increase the lock timer (MS) if needed
                 file_lock.AcquireWriterLock(500);
                 File.AppendAllLines(FilePath, new[] { text });
+            }
+            finally
+            {
+                file_lock.ReleaseWriterLock();
+            }
+        }
+
+        public static async Task WriteToFileAsync(string text)
+        {
+            try
+            {
+                // Increase the lock timer (MS) if needed
+                file_lock.AcquireWriterLock(300);
+                byte[] encodedText = Encoding.UTF8.GetBytes(text + '\n');
+                using (FileStream sourceStream = new FileStream(
+                    FilePath, FileMode.Append, FileAccess.Write, FileShare.None,
+                    bufferSize: 4096, useAsync: true))
+                {
+                    await sourceStream.WriteAsync(encodedText, 0, encodedText.Length);
+                };
             }
             finally
             {

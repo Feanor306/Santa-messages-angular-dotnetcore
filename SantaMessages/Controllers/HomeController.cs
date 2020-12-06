@@ -13,11 +13,11 @@ namespace SantaMessages.Controllers
     [Route("[controller]")]
     public class HomeController : ControllerBase
     {
-        private readonly ILogger<HomeController> _logger;
+        public IBackgroundTaskQueue Queue { get; }
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IBackgroundTaskQueue queue)
         {
-            _logger = logger;
+            Queue = queue;
         }
 
         [HttpPost]
@@ -27,7 +27,9 @@ namespace SantaMessages.Controllers
             string msg = HttpContext.Request.Form["message"];
             try
             {
-                FileLogger.WriteToFile(msg);
+                Queue.QueueBackgroundWorkItem(async token => {
+                    await FileLogger.WriteToFileAsync(msg);
+                });
                 return JsonConvert.SerializeObject(new
                 {
                     status = "Message Accepted",

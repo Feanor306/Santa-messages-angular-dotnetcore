@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SantaMessages.Services;
 
 namespace SantaMessages
 {
@@ -26,6 +27,9 @@ namespace SantaMessages
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddHostedService<QueueService>();
+            services.AddSingleton<IBackgroundTaskQueue, MessageQueue>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
